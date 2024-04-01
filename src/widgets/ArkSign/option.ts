@@ -78,3 +78,20 @@ export const filterProfessionList = [
     value: "SPECIAL",
   },
 ];
+
+export const themeList = [
+  {
+    themeId: "default",
+    themeName: "默认",
+    themeColor1: "#313131",
+    themeColor2: "#1d1d1d",
+    bgUrl: "https://static.prts.wiki/charinfo/img/skland/Logo_rhodesBlack.png",
+  },
+  {
+    themeId: "RhineLab",
+    themeName: "莱茵生命",
+    themeColor1: "#e8e6e2",
+    themeColor2: "#c6beb4",
+    bgUrl: "https://static.prts.wiki/charinfo/img/skland/Logo_rhodesBlack.png",
+  },
+];

@@ -44,9 +44,14 @@ import {
   starWhite,
   starYellow,
 } from "./getUrl";
-import { filterProfessionList, filterRarityList, sortList } from "./option";
+import {
+  filterProfessionList,
+  filterRarityList,
+  sortList,
+  themeList,
+} from "./option";
 import { getPlayerBinding, getPlayerInfo } from "./skland";
-import type { BindingListItem, Char, PlayerInfo } from "./types";
+import type { BindingListItem, Char, PlayerInfo, ThemeItem } from "./types";
 
 const isMobile = isMobileSkin();
 const doctorInfo = ref<{
@@ -63,6 +68,8 @@ const doctorInfo = ref<{
   },
   server: "1",
 });
+const themeInfo = ref(themeList[0]);
+const selectTheme = ref("default");
 const drawerShow = ref(false);
 const modalShow = ref(false);
 const showImgResult = ref(false);
@@ -231,7 +238,9 @@ function handleChangeUid(value: string, option: BindingListItem) {
   doctorInfo.value.server = option.channelMasterId;
   importSKLandOperatorDataByUid(value);
 }
-
+function handleChangeTheme(value: string, option: ThemeItem) {
+  themeInfo.value = option;
+}
 function renderLabel(option: BindingListItem): VNodeChild {
   let typeColor = {};
   if (option.channelMasterId == "1") {
@@ -249,8 +258,8 @@ function renderLabel(option: BindingListItem): VNodeChild {
   }
   return h(Label, {
     typeColor,
-    nickName: option.nickName,
-    channelName: option.channelName,
+    nickName: option.nickName || "",
+    channelName: option.channelName || "",
   });
 }
 function selectChar(charId: string) {
@@ -342,7 +351,11 @@ function calcServerColor(id: string) {
       }}
     </n-alert>
     <div class="charSign">
-      <div ref="charSignInner" class="charSignInner">
+      <div
+        ref="charSignInner"
+        class="charSignInner"
+        :style="`--themeColor1:${themeInfo.themeColor1};--themeColor2:${themeInfo.themeColor2};`"
+      >
         <div class="circlePoint">
           <img
             src="https://static.prts.wiki/charinfo/img/skland/rightPoint.png"
@@ -616,8 +629,19 @@ function calcServerColor(id: string) {
       </div>
     </n-card>
     <n-card title="信息展示" style="margin-top: 10px">
-      <n-collapse :default-expanded-names="['1']">
-        <n-collapse-item title="自定义签名" name="1">
+      <n-collapse :default-expanded-names="['1', '2']">
+        <n-collapse-item title="选择主题" name="1">
+          <div class="flex">
+            <n-select
+              v-model:value="selectTheme"
+              label-field="themeName"
+              value-field="themeId"
+              :options="themeList"
+              @update:value="handleChangeTheme"
+            />
+          </div>
+        </n-collapse-item>
+        <n-collapse-item title="自定义签名" name="2">
           <div class="flex w-full">
             <n-input
               v-model:value="customSign"
@@ -1221,7 +1245,11 @@ img {
   width: auto;
   height: calc(var(--charSize) * 30);
   /* background-color: #242424; */
-  background-image: linear-gradient(to right, #313131, #1d1d1d 50%);
+  background-image: linear-gradient(
+    to right,
+    var(--themeColor1),
+    var(--themeColor2) 50%
+  );
   display: flex;
   justify-content: center;
   margin: auto;

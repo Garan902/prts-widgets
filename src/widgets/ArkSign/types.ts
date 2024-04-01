@@ -257,3 +257,11 @@ export interface PlayerBindingResp {
     }>;
   };
 }
+
+export interface ThemeItem {
+  themeId: string;
+  themeName: string;
+  themeColor1: string;
+  themeColor2: string;
+  bgUrl: string;
+}
